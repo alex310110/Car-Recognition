@@ -1,6 +1,10 @@
+#!python
+
 # import the necessary packages
 import json
 import os
+import sys
+from glob import glob
 import random
 
 import cv2 as cv
@@ -19,12 +23,16 @@ if __name__ == '__main__':
     class_names = cars_meta['class_names']  # shape=(1, 196)
     class_names = np.transpose(class_names)
 
-    test_path = 'data/test/'
-    test_images = [f for f in os.listdir(test_path) if
-                   os.path.isfile(os.path.join(test_path, f)) and f.endswith('.jpg')]
+    if len(sys.argv) > 1:
+        test_path = ''
+        samples = sum(map(glob, sys.argv[1:]), [])
+    else:
+        test_path = 'data/test/'
+        test_images = [f for f in os.listdir(test_path) if
+                    os.path.isfile(os.path.join(test_path, f)) and f.endswith('.jpg')]
+        num_samples = 20
+        samples = random.sample(test_images, num_samples)
 
-    num_samples = 20
-    samples = random.sample(test_images, num_samples)
     results = []
     for i, image_name in enumerate(samples):
         filename = os.path.join(test_path, image_name)

@@ -1,3 +1,5 @@
+#!python
+
 import keras
 from resnet_152 import resnet152_model
 from keras.preprocessing.image import ImageDataGenerator
