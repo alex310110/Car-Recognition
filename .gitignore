@@ -15,4 +15,4 @@ devkit/cars_train_annos.mat
 devkit/eval_train.m
 devkit/train_perfect_preds.txt
 images/*_out.png
-results.json
+result*
