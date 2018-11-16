@@ -17,7 +17,7 @@ from utils import load_model
 if __name__ == '__main__':
     img_width, img_height = 224, 224
     model = load_model()
-    model.load_weights('models/model.96-0.89.hdf5')
+    model.load_weights('models/model.40-0.88.hdf5')
 
     cars_meta = scipy.io.loadmat('devkit/cars_meta')
     class_names = cars_meta['class_names']  # shape=(1, 196)
