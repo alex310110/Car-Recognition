@@ -11,12 +11,12 @@ num_channels = 3
 train_data = 'data/train'
 valid_data = 'data/valid'
 num_classes = 48
-num_train_samples = 6549
-num_valid_samples = 1595
+num_train_samples = 2049
+num_valid_samples = 360
 verbose = 1
 batch_size = 16
-num_epochs = 100
-patience = 5
+num_epochs = 1000
+patience = 15
 
 if __name__ == '__main__':
     # build a classifier model
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     log_file_path = 'logs/training.log'
     csv_logger = CSVLogger(log_file_path, append=False)
     early_stop = EarlyStopping('val_acc', patience=patience)
-    reduce_lr = ReduceLROnPlateau('val_acc', factor=0.1, patience=int(patience / 4), verbose=1)
+    reduce_lr = ReduceLROnPlateau('val_acc', factor=0.1, patience=int(patience / 2), verbose=1)
     trained_models_path = 'models/model'
     model_names = trained_models_path + '.{epoch:02d}-{val_acc:.2f}.hdf5'
     model_checkpoint = ModelCheckpoint(model_names, monitor='val_acc', verbose=1, save_best_only=True)
