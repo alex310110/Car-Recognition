@@ -20,7 +20,7 @@ if __name__ == '__main__':
     model.load_weights('models/model.40-0.88.hdf5')
 
     cars_meta = scipy.io.loadmat('devkit/cars_meta')
-    class_names = cars_meta['class_names']  # shape=(1, 196)
+    class_names = cars_meta['class_names']  # shape=(1, x)
     class_names = np.transpose(class_names)
 
     if len(sys.argv) > 1:

@@ -155,7 +155,7 @@ if __name__ == '__main__':
             tar.extractall()
 
     cars_meta = scipy.io.loadmat('devkit/cars_meta')
-    class_names = cars_meta['class_names']  # shape=(1, 196)
+    class_names = cars_meta['class_names']  # shape=(1, x)
     class_names = np.transpose(class_names)
     print('class_names.shape: ' + str(class_names.shape))
     print('Sample class_name: [{}]'.format(class_names[8][0][0]))

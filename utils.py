@@ -7,7 +7,7 @@ def load_model():
     model_weights_path = 'models/model.40-0.88.hdf5'
     img_width, img_height = 224, 224
     num_channels = 3
-    num_classes = 196
+    num_classes = 48
     model = resnet_model(img_height, img_width, num_channels, num_classes)
     model.load_weights(model_weights_path, by_name=True)
     return model
