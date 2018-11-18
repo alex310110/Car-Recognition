@@ -22,12 +22,12 @@ class KaggleTest:
 
     def get_annotation(self):
         self.name_map = dict()
-        with open('../stanford-car-dataset/names.csv') as f:
+        with open('devkit/names.csv') as f:
             for i, line in enumerate(f):
                 self.name_map[i+1] = line.strip()
 
         self.file_map = dict()
-        with open('../stanford-car-dataset/anno_test.csv') as f:
+        with open('devkit/anno_test.csv') as f:
             for line in f:
                 line = line.strip().split(',')
                 self.file_map[line[0]] = int(line[-1])
