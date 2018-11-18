@@ -3,6 +3,9 @@
 Convert annotation to car brands only
 '''
 
+import os
+from glob import glob
+
 
 class BrandConverter:
     NAME_CSV = 'devkit/names.csv'
@@ -48,7 +51,33 @@ class BrandConverter:
         with open(self.NAME_CSV, 'w') as f:
             f.write('\n'.join(brands))
 
+    def order_files(self):
+        # create folder
+        with open(self.NAME_CSV) as f:
+            num_brands = len(f.readlines())
+        for i in range(num_brands):
+            os.mkdir('data/train/%04d' % (i+1))
+            os.mkdir('data/valid/%04d' % (i+1))
+
+        # move train/valid pics
+        train_mapper = dict()
+        with open(self.TRAIN_CSV) as f:
+            for line in f:
+                line = line.strip().split(',')
+                train_mapper[line[0]] = int(line[-1])
+        for i in glob('data/train/*.jpg'):
+            target = i.replace('\\', '/').rsplit('/', 1)
+            target = target[0] + ('/%04d/' %
+                                  train_mapper[target[1]]) + target[1]
+            os.rename(i, target)
+        for i in glob('data/valid/*.jpg'):
+            target = i.replace('\\', '/').rsplit('/', 1)
+            target = target[0] + ('/%04d/' %
+                                  train_mapper[target[1]]) + target[1]
+            os.rename(i, target)
+
 
 if __name__ == "__main__":
     bc = BrandConverter()
     bc.convert_annotation()
+    bc.order_files()
