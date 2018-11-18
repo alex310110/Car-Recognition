@@ -5,6 +5,7 @@ Convert annotation to car brands only
 
 import os
 from glob import glob
+import random
 
 
 class BrandConverter:
@@ -13,6 +14,7 @@ class BrandConverter:
     TEST_CSV = 'devkit/anno_test.csv'
 
     def convert_annotation(self):
+        '''convert annotation to brand-based'''
         brands = set()
         idx_mapper = dict()
 
@@ -52,6 +54,7 @@ class BrandConverter:
             f.write('\n'.join(brands))
 
     def order_files(self):
+        '''arrange training files into folders of different classes'''
         # create folder
         with open(self.NAME_CSV) as f:
             num_brands = len(f.readlines())
@@ -76,8 +79,54 @@ class BrandConverter:
                                   train_mapper[target[1]]) + target[1]
             os.rename(i, target)
 
+    def balance_files(self, min_max_factor=2):
+        '''reduce the number of files in each class to prevent bias result'''
+        # count num of files within each classes in test
+        class_map = dict()
+        with open(self.TEST_CSV) as f:
+            for line in f:
+                line = line.split(',')
+                filename, class_id = line[0], int(line[-1])
+                if class_id not in class_map:
+                    class_map[class_id] = []
+                class_map[class_id].append(filename)
+        class_map = sorted(class_map.items(), key=lambda x: len(x[1]))
+
+        # remove files
+        backup_folder = 'data/backup_test/'
+        os.makedirs(backup_folder, exist_ok=True)
+        max_files = int(len(class_map[0][1]) * min_max_factor)
+        for _, v in class_map:
+            if len(v) <= max_files:
+                continue
+            victims = random.sample(v, len(v) - max_files)
+            for i in victims:
+                os.rename('data/test/' + i, backup_folder + i)
+
+        # count num of files within each classes in train/valid
+        def deal_folder(folder_name):
+            class_map = sorted([
+                (d, [f for f in os.listdir('/'.join(['data', folder_name, d]))])
+                for d in os.listdir('data/' + folder_name)
+            ], key=lambda x: len(x[1]))
+
+            # remove files
+            backup_folder = 'data/backup_%s/' % folder_name
+            os.makedirs(backup_folder, exist_ok=True)
+            max_files = int(len(class_map[0][1]) * min_max_factor)
+            for k, v in class_map:
+                if len(v) <= max_files:
+                    continue
+                victims = random.sample(v, len(v) - max_files)
+                for i in victims:
+                    os.rename('/'.join(['data', folder_name, k, i]),
+                              backup_folder + i)
+        deal_folder('train')
+        deal_folder('valid')
+
 
 if __name__ == "__main__":
     bc = BrandConverter()
     bc.convert_annotation()
     bc.order_files()
+    bc.balance_files()
