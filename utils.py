@@ -4,7 +4,7 @@ from resnet_50 import resnet50_model as resnet_model
 
 
 def load_model():
-    model_weights_path = 'models/model.40-0.88.hdf5'
+    model_weights_path = 'models/make_even.36-0.80.hdf5'
     img_width, img_height = 224, 224
     num_channels = 3
     num_classes = 48
